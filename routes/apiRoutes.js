@@ -25,10 +25,10 @@ module.exports = function (app) {
         // console.log(uuid)
 
         const newNote = req.body;
-        
+
 
         newNote.id = uuid;
-         console.log(newNote)
+        console.log(newNote)
 
         fs.readFile('db/db.json', (err, data) => {
             if (err) {
@@ -42,49 +42,66 @@ module.exports = function (app) {
             console.log(dbNotes)
             var myJSON = JSON.stringify(dbNotes);
 
-            fs.writeFile("db/db.json", myJSON, function(err) {
-                if(err) {
+            fs.writeFile("db/db.json", myJSON, function (err) {
+                if (err) {
                     return console.log(err);
                 }
                 console.log("The file was saved!");
 
                 res.json(dbNotes);
-            }); 
+            });
 
 
 
-            
+
         })
-
-        // let db = readDb;
-
-        // db.push(newNote);
-
-
-        // writeDb(db);
-
-
-        // res.json(db);
     });
 
 
-    // app.delete("/api/notes/:id", function (req, res) {
-
-    //     const db = readDb;
-
-    //     const deleteId = req.params.id;
-
-    //     for (let i = 0; i < db.length; i += 1) {
-    //         if (db[i].id === deleteId) {
-
-    //             db.splice(i, 1);
-
-    //             break;
-    //         }
+    app.delete("/api/notes/:id", function (req, res) {
 
 
+        // const db = readDb;
 
 
+        const deleteId = req.params.id;
+
+        console.log(deleteId)
+
+        fs.readFile('db/db.json', (err, data) => {
+            if (err) {
+                console.error(err)
+                return
+            }
+            // console.log(data)
+            var obj = JSON.parse(data);
+            console.log(obj)
+
+            for (let i = 0; i < obj.length; i += 1) {
+                if (obj[i].id === deleteId) {
+
+                    obj.splice(i, 1);
+                }
+            }
+            
+            console.log('delete',obj)
+            var myJSON = JSON.stringify(obj);
+            console.log(myJSON)
+
+            fs.writeFile("db/db.json", myJSON, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("The file was saved!");
+
+                res.json({});
+            });
 
 
-        }
+            // res.json(obj);
+        })
+
+
+    })
+
+}
